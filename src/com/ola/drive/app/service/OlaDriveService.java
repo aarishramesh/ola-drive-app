@@ -5,6 +5,8 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 
 import com.google.gson.Gson;
+import com.ola.drive.app.handler.OlaDriveServiceHandler;
+import com.ola.drive.model.response.ApiResponse;
 
 /**
  * Application entry class for Ola Drive service which provides REST based apis for 
@@ -15,6 +17,7 @@ import com.google.gson.Gson;
  *
  */
 public class OlaDriveService {
+	
 	public static void main(String[] args) {
 		port(7777);
 		
@@ -26,23 +29,25 @@ public class OlaDriveService {
 			response.type("application/json");
 			String customerIdStr = request.params(":id");
 			int customerId = Integer.parseInt(customerIdStr);
-			DriveRequestDelegator.getInstance().addCustomerRideRequest(customerId);
+			ApiResponse apiResponse = OlaDriveServiceHandler.getInstance().addCustomerRideRequest(customerId);
 			Gson gson = new Gson ();
-			return gson.toJson("");
+			return gson.toJson(apiResponse);
 		});
 		
 		get("ola-drive/driver/:id/ride", (request, response) -> {
 			response.type("application/json");
-			
+			String driverIdStr = request.params(":id");
+			int driverId = Integer.parseInt(driverIdStr);
+			ApiResponse apiResponse = OlaDriveServiceHandler.getInstance().getDriverRidesView(driverId);
 			Gson gson = new Gson ();
-			return gson.toJson("");
+			return gson.toJson(apiResponse);
 		});
 		
 		get("ola-drive/ride/dashboard", (request, response) -> {
 			response.type("application/json");
-			
+			ApiResponse apiResponse = OlaDriveServiceHandler.getInstance().getDashboardRidesView();
 			Gson gson = new Gson ();
-			return gson.toJson("");
+			return gson.toJson(apiResponse);
 		});
 	}
 }

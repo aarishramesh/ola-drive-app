@@ -25,7 +25,7 @@ public class OlaDriver implements Runnable {
 	private boolean available;
 	private static int driveServiceTimeMillis = 5 * 60 * 1000;
 	
-	private BlockingQueue<RideMessage> rideRequestQueue = new ArrayBlockingQueue<RideMessage>(500);
+	private BlockingQueue<RideMessage> rideRequestQueue = null;
 	
 	public OlaDriver(int driverId, BlockingQueue<RideMessage> rideRequestQueue) {
 		this.driverId = driverId;
@@ -38,6 +38,9 @@ public class OlaDriver implements Runnable {
             RideMessage msg;
             //consuming messages until exit message is received
             while (true) {
+        		if (rideRequestQueue == null) {
+        			throw new Exception("Error. Driver queue is null");
+        		}
             	if (available) {
             		msg = rideRequestQueue.take();
             		
@@ -57,6 +60,8 @@ public class OlaDriver implements Runnable {
         } catch(InterruptedException e) {
             e.printStackTrace();
         } catch (SQLException e) {
+        	e.printStackTrace();
+        } catch (Exception e) {
         	e.printStackTrace();
         }
 	}
