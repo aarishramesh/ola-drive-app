@@ -7,7 +7,7 @@ Ola Drive Backend API Application
 - PostGres backend. DB design has been kept simple
 
 - All assumptions are taken into consideration in the design and development aspects 
-	like 5 drivers, driver servicing time is 30 minutes
+	like 5 drivers, driver servicing time is 5 minutes
 
 - Blocking queue has been set to a size of 1000 after which it starts blocking 
 
