@@ -98,7 +98,7 @@ public class RideRequestStore {
 		RideRequest rideRequest = null;
 		try {
 			StringBuilder sql = new StringBuilder();
-			sql.append ("select * from RideRequest where customer_id = ? and ;");
+			sql.append ("select * from RideRequest where customer_id = ?;");
 			connection = PostgreSQLJDBC.getInstance().connect();
 
 			pstmt = connection.prepareStatement(sql.toString());
@@ -129,9 +129,9 @@ public class RideRequestStore {
 			pstmt.setLong(1, customerId);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				return false;
-			} else {
 				return true;
+			} else {
+				return false;
 			}
 		} catch(Exception e){
 			throw new SQLException(e);
@@ -139,7 +139,6 @@ public class RideRequestStore {
 			if (pstmt != null) pstmt.close();
 			if (connection != null) connection.close();
 		}
-
 	}
 	
 	public RideRequest constructRideRequestFromRs(ResultSet rs) throws SQLException {
