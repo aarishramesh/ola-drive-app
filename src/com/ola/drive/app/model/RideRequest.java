@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 public class RideRequest {
-	private long requestId;
+	private int requestId;
 	private long customerId;
 	private long requestTime;
 	private String rideLocaton;
@@ -34,7 +34,7 @@ public class RideRequest {
 	}
 	
 	public static class RideRequestBuilder {
-		private long requestId;
+		private int requestId;
 		private long customerId;
 		private long requestTime;
 		private String rideLocaton;
@@ -43,7 +43,7 @@ public class RideRequest {
 		private long startTime;
 		private long endTime;
 		
-		public RideRequestBuilder setRequestId(long requestId) {
+		public RideRequestBuilder setRequestId(int requestId) {
 			this.requestId = requestId;
 			return this;
 		}

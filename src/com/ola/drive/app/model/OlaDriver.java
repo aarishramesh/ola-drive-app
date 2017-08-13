@@ -1,5 +1,6 @@
 package com.ola.drive.app.model;
 
+import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -41,10 +42,8 @@ public class OlaDriver implements Runnable {
             		msg = rideRequestQueue.take();
             		
             		// Update the corresponding request in database
-            		RideRequestStore.getInstance().addDriverToRideRequest(driverId);
+            		RideRequestStore.getInstance().addDriverToRideRequest(msg.getRequestId(), driverId);
             		
-            		// Process the message change the status to available
-            		long customerId = msg.getCustomerId();
             		Thread.sleep(driveServiceTimeMillis);
             		
             		// Update the corresponding request in database
@@ -57,6 +56,8 @@ public class OlaDriver implements Runnable {
             }
         } catch(InterruptedException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+        	e.printStackTrace();
         }
 	}
 

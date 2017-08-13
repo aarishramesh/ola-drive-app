@@ -14,8 +14,8 @@ import org.apache.commons.dbcp.BasicDataSource;
  */
 public class PostgreSQLJDBC {
 	
-	private static final String SERVER = "";
-	private static final String USER = "";
+	private static final String SERVER = "jdbc:postgresql://localhost:5432/ola";
+	private static final String USER = "aarishramesh";
 	private static final String PASSWORD = "";
 	
 	private static PostgreSQLJDBC INSTANCE = new PostgreSQLJDBC();
