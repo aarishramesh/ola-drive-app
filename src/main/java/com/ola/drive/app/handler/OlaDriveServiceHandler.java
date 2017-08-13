@@ -15,12 +15,19 @@ public class OlaDriveServiceHandler {
 	}
 
 	public ApiResponse addCustomerRideRequest(long customerId) {
-		RideRequest rideRequest = DriveRequestDelegator.getInstance().addCustomerRideRequest(customerId);
+
+		// Check if the request has already been picked up
 		ApiResponse response = new ApiResponse();
-		if (rideRequest != null) {
-			response.setData(rideRequest);
-		} else {
-			Error error = new Error("500", "Internal Server error while adding ride request");
+		try {
+			RideRequest rideRequest = DriveRequestDelegator.getInstance().addCustomerRideRequest(customerId);
+			if (rideRequest != null) {
+				response.setData(rideRequest);
+			} else {
+				Error error = new Error("500", "Internal Server error while adding ride request");
+				response.setError(error);
+			}
+		} catch (Exception ex) {
+			Error error = new Error("500", "Internal Server error");
 			response.setError(error);
 		}
 		return response;
@@ -37,7 +44,7 @@ public class OlaDriveServiceHandler {
 		}
 		return response;
 	}
-	
+
 	public ApiResponse getDashboardRidesView() {
 		ApiResponse response = new ApiResponse();
 		try {

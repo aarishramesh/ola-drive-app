@@ -98,7 +98,7 @@ public class RideRequestStore {
 		RideRequest rideRequest = null;
 		try {
 			StringBuilder sql = new StringBuilder();
-			sql.append ("select * from RideRequest where customer_id = ?;");
+			sql.append ("select * from RideRequest where customer_id = ? and ;");
 			connection = PostgreSQLJDBC.getInstance().connect();
 
 			pstmt = connection.prepareStatement(sql.toString());
@@ -115,6 +115,33 @@ public class RideRequestStore {
 		return rideRequest;
 	}
 
+	public boolean checkThereIsNoOngoingRidesForCustomer(long customerId) throws SQLException {
+		ResultSet rs = null;
+		PreparedStatement pstmt = null;
+		Connection connection = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append ("select * from RideRequest where customer_id = ?"
+					+ " and status = 1;");
+			connection = PostgreSQLJDBC.getInstance().connect();
+
+			pstmt = connection.prepareStatement(sql.toString());
+			pstmt.setLong(1, customerId);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				return false;
+			} else {
+				return true;
+			}
+		} catch(Exception e){
+			throw new SQLException(e);
+		} finally{
+			if (pstmt != null) pstmt.close();
+			if (connection != null) connection.close();
+		}
+
+	}
+	
 	public RideRequest constructRideRequestFromRs(ResultSet rs) throws SQLException {
 		RideRequest rideRequest = null;
 		try {
