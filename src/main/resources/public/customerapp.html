@@ -1,0 +1,37 @@
+<html>
+<head>Customer app</head>
+<body>
+<div> 
+<table> 
+	<tr>
+	<td>Customer Id :</td> 
+	<td>
+	<form action="http://localhost:7777/customer/ride" method="post">
+    <input name="forename" />
+</form>
+</td></tr>
+	</tr></tr>
+</table>
+</div>
+</body>
+
+<script>
+$(document).ready(function(){
+$("#submitform").click(function(e)
+{
+var MyForm = JSON.stringify($("#myform").serializeJSON());
+console.log(MyForm);
+ $.ajax(
+ {
+ url : "<your url>",
+ type: "POST",
+ data : MyForm,
+
+ });
+ e.preventDefault(); //STOP default action
+
+});
+});
+</script>
+
+</html>

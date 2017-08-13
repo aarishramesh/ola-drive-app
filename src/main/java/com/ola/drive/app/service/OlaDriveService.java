@@ -6,7 +6,10 @@ import static spark.Spark.post;
 
 import com.google.gson.Gson;
 import com.ola.drive.app.handler.OlaDriveServiceHandler;
+import com.ola.drive.app.model.DriveRequest;
 import com.ola.drive.app.model.response.ApiResponse;
+
+import spark.Spark;
 
 /**
  * Application entry class for Ola Drive service which provides REST based apis for 
@@ -19,16 +22,18 @@ import com.ola.drive.app.model.response.ApiResponse;
 public class OlaDriveService {
 	
 	public static void main(String[] args) {
+		Spark.staticFileLocation("/public");
 		port(7777);
 		
 		get ("ola-drive/ping", (request, response) -> {
 			return "pong";
 		});
 		
-		post ("ola-drive/customer/:id/ride", (request, response) -> {
+		post ("ola-drive/customer/ride", (request, response) -> {
 			response.type("application/json");
-			String customerIdStr = request.params(":id");
-			int customerId = Integer.parseInt(customerIdStr);
+			DriveRequest requestBody = new Gson().fromJson (request.body (), DriveRequest.class);
+			int customerId = requestBody.getCustomerId();
+			System.out.println("-------- Customer Id :: " + customerId);
 			ApiResponse apiResponse = OlaDriveServiceHandler.getInstance().addCustomerRideRequest(customerId);
 			Gson gson = new Gson ();
 			return gson.toJson(apiResponse);

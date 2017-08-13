@@ -30,6 +30,7 @@ public class OlaDriveServiceHandler {
 				}
 			}
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			Error error = new Error("500", "Internal Server error");
 			response.setError(error);
 		}
