@@ -3,7 +3,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>OlaDriveApp</groupId>
   <artifactId>OlaDriveApp</artifactId>
+  <name>ola-drive-app</name>
   <version>0.0.1-SNAPSHOT</version>
+  <url>http://maven.apache.org</url>
   <build>
     <plugins>
       <plugin>
@@ -101,6 +103,14 @@
       </plugin>
     </plugins>
   </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.16.2</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
