@@ -7,7 +7,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 
 /**
  * Singleton class which facilitates/manages connections to underlying Postgres 
- * database using connection pooling
+ * database using DBCP connection pooling
  * 
  * @author aarishramesh
  *
