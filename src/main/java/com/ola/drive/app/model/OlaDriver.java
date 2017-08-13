@@ -25,7 +25,7 @@ public class OlaDriver implements Runnable {
 
 	private int driverId;
 	private boolean available = true;
-	private static int driveServiceTimeMillis = 1 * 60 * 1000;
+	private static int driveServiceTimeMillis = 30 * 60 * 1000;
 	
 	private static final Logger LOG = LoggerFactory.getLogger(OlaDriver.class);
 
