@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.ola.drive.app.dao.RideRequestStore;
 import com.ola.drive.app.model.RideRequest;
-import com.ola.drive.model.response.ApiResponse;
-import com.ola.drive.model.response.Error;
+import com.ola.drive.app.model.response.ApiResponse;
+import com.ola.drive.app.model.response.Error;
 
 public class OlaDriveServiceHandler {
 	private static final OlaDriveServiceHandler INSTANCE = new OlaDriveServiceHandler();

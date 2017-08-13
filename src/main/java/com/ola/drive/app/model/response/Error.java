@@ -1,4 +1,4 @@
-package com.ola.drive.model.response;
+package com.ola.drive.app.model.response;
 
 import java.util.ArrayList;
 import java.util.List;

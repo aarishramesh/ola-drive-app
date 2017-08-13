@@ -6,7 +6,7 @@ import static spark.Spark.post;
 
 import com.google.gson.Gson;
 import com.ola.drive.app.handler.OlaDriveServiceHandler;
-import com.ola.drive.model.response.ApiResponse;
+import com.ola.drive.app.model.response.ApiResponse;
 
 /**
  * Application entry class for Ola Drive service which provides REST based apis for 
