@@ -7,7 +7,8 @@ public class RideMessage {
 	private int requestId;
 	private long customerId;
 	
-	public RideMessage(long requestId, long customerId) {
+	public RideMessage(int requestId, long customerId) {
+		this.requestId = requestId;
 		this.customerId = customerId;
 	}
 }

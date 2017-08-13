@@ -35,6 +35,7 @@ public class DriveRequestDelegator {
 			for (int i = 0; i < noOfDrivers; i++) {
 				int driverId = i + 1;
 				OlaDriver driver = new OlaDriver(driverId, rideRequestQueue);
+				new Thread(driver).start();
 				olaDriversList.add(driver);
 			}
 			if (rideRequestQueue.isEmpty()) {
@@ -57,7 +58,7 @@ public class DriveRequestDelegator {
 	public RideRequest addCustomerRideRequest(long customerId) {
 		RideRequest rideRequest = null;
 		try {
-			if (initDone) {
+			if (!initDone) {
 				initDrivers(5);
 				initDone = true;
 			}
