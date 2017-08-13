@@ -22,19 +22,25 @@ public class OlaDriveService {
 			return "pong";
 		});
 		
-		post ("ola-drive/ride/customer/:id", (request, response) -> {
+		post ("ola-drive/customer/:id/ride", (request, response) -> {
+			response.type("application/json");
+			String customerIdStr = request.params(":id");
+			int customerId = Integer.parseInt(customerIdStr);
+			DriveRequestDelegator.getInstance().addCustomerRideRequest(customerId);
+			Gson gson = new Gson ();
+			return gson.toJson("");
+		});
+		
+		get("ola-drive/driver/:id/ride", (request, response) -> {
 			response.type("application/json");
 			
 			Gson gson = new Gson ();
 			return gson.toJson("");
 		});
 		
-		get("ola-drive/driver/:id/ride", (request, response) -> {
-			Gson gson = new Gson ();
-			return gson.toJson("");
-		});
-		
 		get("ola-drive/ride/dashboard", (request, response) -> {
+			response.type("application/json");
+			
 			Gson gson = new Gson ();
 			return gson.toJson("");
 		});
