@@ -36,6 +36,11 @@ public class OlaDriveServiceHandler {
 		ApiResponse response = new ApiResponse();
 		boolean selectionStatus = false;
 		try {
+			boolean isDriverServingRide = RideRequestStore.getInstance().isDriverServingRide(driverId);
+			if (isDriverServingRide) {
+				response.setData("Please complete the ongoing ride before selecting ride!");
+				return response;
+			}
 			boolean isRequestValidTobeAdded = RideRequestStore.getInstance().checkCustomerRequestStillWaiting(requestId, customerId);
 			if (isRequestValidTobeAdded) {
 				boolean rideAdded = DriveRequestDelegator.getInstance().addCustomerRideRequestForDriver(requestId, customerId, driverId);

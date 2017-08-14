@@ -52,6 +52,37 @@ public class RideRequestStore {
 		return false;
 	}
 	
+	public boolean isDriverServingRide(int driverId) throws SQLException {
+		RideRequest rideRequest = getOngoingRideForDriver(driverId);
+		if (rideRequest != null) {
+			return true;
+		}
+		return false;
+	}
+	
+	public RideRequest getOngoingRideForDriver(int driverId) throws SQLException {
+		ResultSet rs = null;
+		PreparedStatement pstmt = null;
+		Connection connection = null;
+		RideRequest rideRequest = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append ("select * from RideRequest where driver_id = ? and status = 1;");
+			connection = PostgreSQLJDBC.getInstance().connect();
+
+			pstmt = connection.prepareStatement(sql.toString());
+			pstmt.setInt(1, driverId);
+			rs = pstmt.executeQuery();
+			rideRequest = constructRideRequestFromRs(rs);
+		} catch(Exception e){
+			throw new SQLException(e);
+		} finally{
+			if (pstmt != null) pstmt.close();
+			if (connection != null) connection.close();
+		}
+		return rideRequest;
+	}
+	
 	public RideRequest addRideRequestFromCustomer(long customerId) throws SQLException {
 
 		// Logic to insert ride request into database

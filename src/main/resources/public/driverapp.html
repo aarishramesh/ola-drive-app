@@ -23,15 +23,15 @@
     	location.reload()
     }
     
-    function postDriveRequest(customerId) {
+    function postDriveRequest(customerId, requestId, driverId) {
     	$.ajax({
         url: "http://localhost:7777/ola-drive/customer/ride",
         type: "POST",
-        data: JSON.stringify({"customerId": customerId}),
+        data: JSON.stringify({"customerId": customerId, "driverId" : driverId, "requestId" : requestId}),
         contentType: "application/json",
         processData: false,
         success: function (result) {
-            alert("Customer ride has been successfully added");
+            alert(result);
             reload();
         }
     });
@@ -56,7 +56,9 @@
 
 						var reqTimeInMin = Math.floor((currTime - item.requestTime)/(60 * 1000)) ;
                         var customerId = item.customerId;
-                        waitingHtml += '<tr><td>Req id:' + item.requestId + '</td><td>Cust id:' + item.customerId + '</td><td> Req Time: ' + reqTimeInMin + ' mins ago</td><td><input type="button" value="select" onclick="javascript: postDriveRequest(customerId)"/></td></tr>';
+                        var requestId = item.requestId;
+                        var driverId = item.driverId;
+                        waitingHtml += '<tr><td>Req id:' + item.requestId + '</td><td>Cust id:' + item.customerId + '</td><td> Req Time: ' + reqTimeInMin + ' mins ago</td><td><input type="button" value="select" onclick="javascript: postDriveRequest(customerId, requestId, driverId)"/></td></tr>';
 
                     } else if (item.status == 1) {
                         
