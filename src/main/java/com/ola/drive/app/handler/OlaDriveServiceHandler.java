@@ -41,9 +41,12 @@ public class OlaDriveServiceHandler {
 				response.setData("Please complete the ongoing ride before selecting ride!");
 				return response;
 			}
+			System.out.println("---- Driver is free ------------");
 			boolean isRequestValidTobeAdded = RideRequestStore.getInstance().checkCustomerRequestStillWaiting(requestId, customerId);
+			System.out.println("------ Request validation result :: " + isRequestValidTobeAdded);
 			if (isRequestValidTobeAdded) {
 				boolean rideAdded = DriveRequestDelegator.getInstance().addCustomerRideRequestForDriver(requestId, customerId, driverId);
+				System.out.println(" -----  Ride addition result :: " + rideAdded);
 				if (rideAdded) {
 					selectionStatus = true;
 				}

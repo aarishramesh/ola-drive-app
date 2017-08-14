@@ -2,22 +2,23 @@
     <head>Rides Dashboard View
     </head>
     <body>
-         <form name="submitform" id="submitform">
-               <input type="submit" value="Refresh">
-         </form>
+          <input type="button" value="refresh" onclick="javascript: reload()"/>
          
           <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     
     <script>
-    $('[name="submitform"]').submit(function (e) {
-    e.preventDefault(); 
+   
+    function reload() {
+    	location.reload()
+    }
+    
     $.ajax({
         url: "http://localhost:7777/ola-drive/ride/dashboard",
         dataType: 'json',
         type: "GET",
         success: function (result) {
             //alert(result);
-            var trHTML = '<table><tr><th>RequestId</th><th>CustomerId</th><th>RequestTime</th><th>Status</th><th>DriverId</th><th>Start time</th><th>End time</th></tr>';
+            var trHTML = '<table border="1"><tr><th>RequestId</th><th>CustomerId</th><th>RequestTime</th><th>Status</th><th>DriverId</th><th>Start time</th><th>End time</th></tr>';
             $.each(result.data, function (i, item) {
             		var requestTime;
             		if (item.requestTime != 0) {
@@ -49,7 +50,7 @@
             $("#tableHolder").html(trHTML);
         }
     }).done (function(data) { });
-    });
+
     </script>
     
     <div id="tableHolder"></div>
