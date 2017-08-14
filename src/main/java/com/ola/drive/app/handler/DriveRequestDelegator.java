@@ -1,15 +1,9 @@
 package com.ola.drive.app.handler;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 
-import com.ola.drive.app.dao.RideRequestStore;
 import com.ola.drive.app.model.OlaDriver;
-import com.ola.drive.app.model.RideMessage;
-import com.ola.drive.app.model.RideRequest;
 
 /**
  * Singleton Controller class which facilitates the publish of ride request to 
@@ -25,29 +19,15 @@ import com.ola.drive.app.model.RideRequest;
  */
 public class DriveRequestDelegator {
 	private static final DriveRequestDelegator INSTANCE = new DriveRequestDelegator();
-	private static final List<OlaDriver> olaDriversList = new ArrayList<OlaDriver>();
+	private final List<OlaDriver> olaDriversList = new ArrayList<OlaDriver>();
 	private static boolean initDone;
 
-	private BlockingQueue<RideMessage> rideRequestQueue = new ArrayBlockingQueue<RideMessage>(1000);
-
 	public void initDrivers(int noOfDrivers) {
-		try {
-			for (int i = 0; i < noOfDrivers; i++) {
-				int driverId = i + 1;
-				OlaDriver driver = new OlaDriver(driverId, rideRequestQueue);
-				new Thread(driver).start();
-				olaDriversList.add(driver);
-			}
-			if (rideRequestQueue.isEmpty()) {
-				// Try loading all the non-handled requests from database
-				List<RideRequest> waitingRideRequests = RideRequestStore.getInstance().getWaitingRideRequests();
-				for (RideRequest waitingRequest : waitingRideRequests) {
-					RideMessage msg = new RideMessage(waitingRequest.getRequestId(), waitingRequest.getCustomerId());
-					rideRequestQueue.offer(msg);
-				}
-			}
-		} catch (SQLException sq) {
-			sq.printStackTrace();
+		for (int i = 0; i < noOfDrivers; i++) {
+			int driverId = i + 1;
+			OlaDriver driver = new OlaDriver(driverId);
+			new Thread(driver).start();
+			olaDriversList.add(driver);
 		}
 	}
 
@@ -55,27 +35,18 @@ public class DriveRequestDelegator {
 		return INSTANCE;
 	}
 
-	public RideRequest addCustomerRideRequest(long customerId) {
-		RideRequest rideRequest = null;
+	public boolean addCustomerRideRequestForDriver(int requestId, long customerId, int driverId) {
 		try {
 			if (!initDone) {
 				initDrivers(5);
 				initDone = true;
 			}
 
-			// Add request to database
-			rideRequest = RideRequestStore.getInstance().addRideRequestFromCustomer(customerId);
-
-			if (rideRequest != null) {
-				RideMessage msg = new RideMessage(rideRequest.getRequestId(), customerId);
-				rideRequestQueue.offer(msg);
-			} else {
-				throw new Exception("Internal server error. Ride request not added");
-			}
-			return rideRequest;
+			OlaDriver driver = this.olaDriversList.get(driverId - 1);
+			return driver.addRideToQueue(requestId, customerId);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return rideRequest;
+		return false;
 	}
 }

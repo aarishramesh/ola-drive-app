@@ -15,19 +15,38 @@ public class OlaDriveServiceHandler {
 	}
 
 	public ApiResponse addCustomerRideRequest(long customerId) {
-
-		// Check if the request has already been picked up
 		ApiResponse response = new ApiResponse();
 		try {
-			boolean isThereAOngoingRide = RideRequestStore.getInstance().checkThereIsNoOngoingRidesForCustomer(customerId);
-			if (!isThereAOngoingRide) {
-				RideRequest rideRequest = DriveRequestDelegator.getInstance().addCustomerRideRequest(customerId);
-				if (rideRequest != null) {
-					response.setData(rideRequest);
-				} else {
-					Error error = new Error("500", "Internal Server error while adding ride request");
-					response.setError(error);
+			RideRequest rideRequest = RideRequestStore.getInstance().addRideRequestFromCustomer(customerId);
+			if (rideRequest != null) {
+				response.setData(rideRequest);
+			} else {
+				Error error = new Error("500", "Internal Server error while adding ride request");
+				response.setError(error);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			Error error = new Error("500", "Internal Server error");
+			response.setError(error);
+		}
+		return response;
+	}
+
+	public ApiResponse addDriverRideRequestForCustomer(int requestId, long customerId, int driverId) {
+		ApiResponse response = new ApiResponse();
+		boolean selectionStatus = false;
+		try {
+			boolean isRequestValidTobeAdded = RideRequestStore.getInstance().checkCustomerRequestStillWaiting(requestId, customerId);
+			if (isRequestValidTobeAdded) {
+				boolean rideAdded = DriveRequestDelegator.getInstance().addCustomerRideRequestForDriver(requestId, customerId, driverId);
+				if (rideAdded) {
+					selectionStatus = true;
 				}
+			}
+			if (selectionStatus) {
+				response.setData("Ride selected successfully");
+			} else {
+				response.setData("Ride selection unsuccessful");
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

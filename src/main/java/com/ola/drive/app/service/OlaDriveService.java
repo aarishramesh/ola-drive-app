@@ -32,9 +32,22 @@ public class OlaDriveService {
 		post ("ola-drive/customer/ride", (request, response) -> {
 			response.type("application/json");
 			DriveRequest requestBody = new Gson().fromJson (request.body (), DriveRequest.class);
-			int customerId = requestBody.getCustomerId();
+			long customerId = requestBody.getCustomerId();
 			System.out.println("-------- Customer Id :: " + customerId);
 			ApiResponse apiResponse = OlaDriveServiceHandler.getInstance().addCustomerRideRequest(customerId);
+			Gson gson = new Gson ();
+			return gson.toJson(apiResponse);
+		});
+		
+		post ("ola-drive/driver/ride", (request, response) -> {
+			response.type("application/json");
+			DriveRequest requestBody = new Gson().fromJson (request.body (), DriveRequest.class);
+			long customerId = requestBody.getCustomerId();
+			int driverId = requestBody.getDriverId();
+			int requestId = requestBody.getRequestId();
+			System.out.println("-------- Customer Id :: " + customerId + " :: DriverId :: " + driverId
+					+ " :: RequestId :: " + requestId);
+			ApiResponse apiResponse = OlaDriveServiceHandler.getInstance().addDriverRideRequestForCustomer(requestId, customerId, driverId);
 			Gson gson = new Gson ();
 			return gson.toJson(apiResponse);
 		});

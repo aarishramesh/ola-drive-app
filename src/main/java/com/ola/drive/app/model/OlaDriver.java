@@ -1,6 +1,7 @@
 package com.ola.drive.app.model;
 
 import java.sql.SQLException;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 import org.slf4j.Logger;
@@ -29,11 +30,15 @@ public class OlaDriver implements Runnable {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(OlaDriver.class);
 
-	private BlockingQueue<RideMessage> rideRequestQueue = null;
+	private BlockingQueue<RideMessage> rideRequestQueue = new ArrayBlockingQueue<RideMessage>(1000);
 	
-	public OlaDriver(int driverId, BlockingQueue<RideMessage> rideRequestQueue) {
+	public OlaDriver(int driverId) {
 		this.driverId = driverId;
-		this.rideRequestQueue = rideRequestQueue;
+	}
+	
+	public boolean addRideToQueue(int requestId, long customerId) {
+		RideMessage msg = new RideMessage(requestId, customerId);
+		return this.rideRequestQueue.offer(msg);
 	}
 	
 	@Override
@@ -68,7 +73,7 @@ public class OlaDriver implements Runnable {
             				" has done servicing the request Id : " + msg.getRequestId() 
             				+ ": customerId : " + msg.getCustomerId());
             	} else {
-            		Thread.sleep(1000);
+            		Thread.sleep(100);
             	}
             }
         } catch(InterruptedException e) {

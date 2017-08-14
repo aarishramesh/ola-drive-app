@@ -4,5 +4,7 @@ import lombok.Data;
 
 @Data
 public class DriveRequest {
-	private int customerId;
+	private long customerId;
+	private int driverId;
+	private int requestId;
 }

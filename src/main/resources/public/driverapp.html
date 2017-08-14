@@ -1,53 +1,103 @@
 <html>
-<head> Ola drive app
-<script>
-function refresh() {
-	alert("Refresh is called");
-}
-</script>
-</head>
+    <head>Driver App
+    </head>
+    <body>
+         <input type="button" value="refresh" onclick="javascript: reload()"/>
 
-<%
-	String driverId = request.
-%>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
-<body>
-<div>
-Driver app - driver id : <input type="refresh" value="refresh" name="refresh" onclick=refresh()/>
-</div>
-<table border="1">
-<tr>
-<td><div>Waiting</div>
-<table>
-<tr><td>Request id : 540</td> <td> Customer Id : 12 </td>
-<td> SELECT </td></tr>
-<tr><td>Request id : 540</td> <td> Customer Id : 12 </td>
-<td> SELECT </td></tr>
-<tr><td>Request id : 540</td> <td> Customer Id : 12 </td>
-<td> SELECT </td></tr>
-</table>
-</td>
-<td><div>OnGoing</div>
-<table>
-<tr><td>Request id : 540</td> <td> Customer Id : 12 </td>
-<td> SELECT </td></tr>
-<tr><td>Request id : 540</td> <td> Customer Id : 12 </td>
-<td> SELECT </td></tr>
-<tr><td>Request id : 540</td> <td> Customer Id : 12 </td>
-<td> SELECT </td></tr>
-</table>
-</td>
-<td><div>Complete</div>
-<table>
-<tr><td>Request id : 540</td> <td> Customer Id : 12 </td>
-<td> SELECT </td></tr>
-<tr><td>Request id : 540</td> <td> Customer Id : 12 </td>
-<td> SELECT </td></tr>
-<tr><td>Request id : 540</td> <td> Customer Id : 12 </td>
-<td> SELECT </td></tr>
-</table>
-</td>
-</tr>
-</table>
+    <script>
+
+	function getParameterByName(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+    
+      
+    function reload() {
+    	location.reload()
+    }
+    
+    function postDriveRequest(customerId) {
+    	$.ajax({
+        url: "http://localhost:7777/ola-drive/customer/ride",
+        type: "POST",
+        data: JSON.stringify({"customerId": customerId}),
+        contentType: "application/json",
+        processData: false,
+        success: function (result) {
+            alert("Customer ride has been successfully added");
+            reload();
+        }
+    });
+    }
+    
+    var driverid = getParameterByName('driverid', '');
+
+    $.ajax({
+        url: "http://localhost:7777/ola-drive/driver/" + driverid + "/ride",
+        dataType: 'json',
+        type: "GET",
+        success: function (result) {
+            var waitingHtml = '<table>';
+            var ongoingHtml = '<table>';
+            var completedHtml = '<table>';
+
+            $.each(result.data, function (i, item) {
+	
+					var d = new Date();
+					var currTime = d.getTime();
+                    if (item.status == 0) {
+
+						var reqTimeInMin = Math.floor((currTime - item.requestTime)/(60 * 1000)) ;
+                        var customerId = item.customerId;
+                        waitingHtml += '<tr><td>Req id:' + item.requestId + '</td><td>Cust id:' + item.customerId + '</td><td> Req Time: ' + reqTimeInMin + ' mins ago</td><td><input type="button" value="select" onclick="javascript: postDriveRequest(customerId)"/></td></tr>';
+
+                    } else if (item.status == 1) {
+                        
+                        var reqTimeInMin = Math.floor((currTime - item.requestTime)/(60 * 1000)) ;
+
+                        var startTimeInMin = Math.floor((currTime - item.startTime)/(60 * 1000));
+                        
+                        ongoingHtml += '<tr><td>Req id:' + item.requestId + '</td><td> Cust id:' + item.customerId + '</td><td> Req Time: ' + reqTimeInMin + ' mins ago</td><td> Start Time : ' + startTimeInMin + ' mins ago</td></tr>';
+                        
+                    } else {
+                        
+                        var reqTimeInMin = Math.floor((currTime - item.requestTime)/(60 * 1000)) ;
+
+                        var startTimeInMin = Math.floor((currTime - item.startTime)/(60 * 1000)) ;
+                        
+                        var endTimeInMin = Math.floor((currTime - item.endTime)/(60 * 1000));
+                        
+                        completedHtml += '<tr><td>Req id:' + item.requestId + '</td><td>  Cust id:' + item.customerId + '</td><td>  Req Time: ' + reqTimeInMin + ' mins ago</td><td> Start Time : ' + startTimeInMin + ' mins ago</td><td>  End Time:' + endTimeInMin + ' mins 	ago</td></tr>';
+                        
+                    }
+
+            	});
+                    waitingHtml+='</table>';
+                    $("#WaitingHolder").html(waitingHtml);
+                    ongoingHtml+='</table>';
+                    $("#OngoingHolder").html(ongoingHtml);
+                    completedHtml+='</table>';
+                    $("#CompletedHolder").html(completedHtml);
+
+        }
+	});
+	
+    </script>
+    
+    <table border="1" >
+    <tr><td align="center"><span style="font-weight:bold">Waiting</span></td><td align="center"><span style="font-weight:bold">Ongoing</span></td><td align="center"><span style="font-weight:bold">Completed</span></td></tr>
+    <tr>
+    <td align="left"><div id="WaitingHolder"></div></td>
+    <td align="left"><div id="OngoingHolder"></div></td>
+    <td align="left"><div id="CompletedHolder"></div></td>
+    </tr>
+    </table>
 </body>
 </html>

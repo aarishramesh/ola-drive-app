@@ -44,6 +44,14 @@ public class RideRequestStore {
 			System.out.println(rideRequest);
 	}
 
+	public boolean checkCustomerRequestStillWaiting(int requestId, long customerId) throws SQLException {
+		RideRequest rideRequest = getRideRequest(requestId, customerId);
+		if (rideRequest != null && rideRequest.getStatus() == RideRequest.RequestStatus.waiting.getStatus()) {
+			return true;
+		}
+		return false;
+	}
+	
 	public RideRequest addRideRequestFromCustomer(long customerId) throws SQLException {
 
 		// Logic to insert ride request into database
@@ -67,7 +75,32 @@ public class RideRequestStore {
 		return rideRequest;
 	}
 
-	public RideRequest getRideRequest(long requestId) throws SQLException {
+	public RideRequest getRideRequest(int requestId, long customerId) throws SQLException {
+		ResultSet rs = null;
+		PreparedStatement pstmt = null;
+		Connection connection = null;
+		RideRequest rideRequest = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append ("select * from RideRequest where request_id = ? and customer_id = ?;");
+			connection = PostgreSQLJDBC.getInstance().connect();
+
+			pstmt = connection.prepareStatement(sql.toString());
+			pstmt.setInt(1, requestId);
+			pstmt.setLong(2, customerId);
+			rs = pstmt.executeQuery();
+			rideRequest = constructRideRequestFromRs(rs);
+		} catch(Exception e){
+			throw new SQLException(e);
+		} finally{
+			if (pstmt != null) pstmt.close();
+			if (connection != null) connection.close();
+		}
+
+		return rideRequest;
+	}
+	
+	public RideRequest getRideRequest(int requestId) throws SQLException {
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
 		Connection connection = null;
@@ -78,7 +111,7 @@ public class RideRequestStore {
 			connection = PostgreSQLJDBC.getInstance().connect();
 
 			pstmt = connection.prepareStatement(sql.toString());
-			pstmt.setLong(1, requestId);
+			pstmt.setInt(1, requestId);
 			rs = pstmt.executeQuery();
 			rideRequest = constructRideRequestFromRs(rs);
 		} catch(Exception e){
