@@ -20,18 +20,18 @@
             //alert(result);
             var trHTML = '<table border="1"><tr><th>RequestId</th><th>CustomerId</th><th>RequestTime</th><th>Status</th><th>DriverId</th><th>Start time</th><th>End time</th></tr>';
             $.each(result.data, function (i, item) {
-            		var requestTime;
-            		if (item.requestTime != 0) {
-            			requestTime = item.requestTime;
-            		}
+            		var d = new Date();
+					var currTime = d.getTime();
+					
+            		var reqTimeInMin = Math.floor((currTime - item.requestTime)/(60 * 1000)) ;
             		
-            		var startDate;
+            		var startTimeInMin;
             		if (item.startTime != 0) {
-            			startDate = new Date(item.startTime);
+            			startTimeInMin = Math.floor((currTime - item.startTime)/(60 * 1000)) ;
             		}
-            		var endDate;
+            		var endTimeInMin;
             		if (item.endTime != 0) {
-            			endDate =  new Date(item.endTime);
+            			endTimeInMin = Math.floor((currTime - item.endTime)/(60 * 1000)) ;
             		}
             		
             		var status;
@@ -43,8 +43,8 @@
             			status = 'Completed';
             		}
             		
-                    trHTML += '<tr><td>' + item.requestId + '</td><td>' + item.customerId + '</td><td>' + requestTime + '</td><td>' + status + '</td><td>' + item.driverId + '</td><td>' + startDate + '</td><td>'
-                    	+ endDate + '</td></tr>';
+                    trHTML += '<tr><td>' + item.requestId + '</td><td>' + item.customerId + '</td><td>' + requestTimeInMin + '</td><td>' + status + '</td><td>' + item.driverId + '</td><td>' + startTimeInMin + '</td><td>'
+                    	+ endTimeInMin + '</td></tr>';
                 });
             trHTML +="</table>";
             $("#tableHolder").html(trHTML);
