@@ -28,10 +28,12 @@
             		var startTimeInMin;
             		if (item.startTime != 0) {
             			startTimeInMin = Math.floor((currTime - item.startTime)/(60 * 1000)) ;
+            			startTimeInMin = startTimeInMin + ' min ago';
             		}
             		var endTimeInMin;
             		if (item.endTime != 0) {
             			endTimeInMin = Math.floor((currTime - item.endTime)/(60 * 1000)) ;
+            			endTimeInMin = endTimeInMin + ' min ago';
             		}
             		
             		var status;
@@ -43,8 +45,8 @@
             			status = 'Completed';
             		}
             		
-                    trHTML += '<tr><td>' + item.requestId + '</td><td>' + item.customerId + '</td><td>' + requestTimeInMin + ' min ago</td><td>' + status + '</td><td>' + item.driverId + '</td><td>' + startTimeInMin + ' min ago</td><td>'
-                    	+ endTimeInMin + ' min ago</td></tr>';
+                    trHTML += '<tr><td>' + item.requestId + '</td><td>' + item.customerId + '</td><td>' + requestTimeInMin + ' min ago</td><td>' + status + '</td><td>' + item.driverId + '</td><td>' + startTimeInMin + ' </td><td>'
+                    	+ endTimeInMin + '</td></tr>';
                 });
             trHTML +="</table>";
             $("#tableHolder").html(trHTML);

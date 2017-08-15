@@ -2,7 +2,7 @@
     <head>Driver App
     </head>
     <body>
-         <input type="button" value="refresh" onclick="javascript: reload()"/>
+         <input type="button" value="Refresh" onclick="javascript: reload()"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
@@ -58,7 +58,7 @@
                         var customerId = item.customerId;
                         var requestId = item.requestId;
                         var driverId = item.driverId;
-                        waitingHtml += '<tr><td>Req id:' + item.requestId + '</td><td>Cust id:' + item.customerId + '</td><td> Req Time: ' + reqTimeInMin + ' mins ago</td><td><input type="button" value="select" onclick="javascript: postDriveRequest(' + item.customerId + ', ' + item.requestId + ', ' + driverid + ')"/></td></tr>';
+                        waitingHtml += '<tr><td>Req id:' + item.requestId + '</td><td> Cust id:' + item.customerId + '</td><td> Req Time: ' + reqTimeInMin + ' min ago</td><td><input type="button" value="select" onclick="javascript: postDriveRequest(' + item.customerId + ', ' + item.requestId + ', ' + driverid + ')"/></td></tr>';
 
                     } else if (item.status == 1) {
                         
@@ -66,7 +66,7 @@
 
                         var startTimeInMin = Math.floor((currTime - item.startTime)/(60 * 1000));
                         
-                        ongoingHtml += '<tr><td>Req id:' + item.requestId + '</td><td> Cust id:' + item.customerId + '</td><td> Req Time: ' + reqTimeInMin + ' mins ago</td><td> Start Time : ' + startTimeInMin + ' mins ago</td></tr>';
+                        ongoingHtml += '<tr><td>Req id:' + item.requestId + '</td><td> Cust id:' + item.customerId + '</td><td> Req Time: ' + reqTimeInMin + ' min ago</td><td> Start Time : ' + startTimeInMin + ' min ago</td></tr>';
                         
                     } else {
                         
@@ -76,7 +76,7 @@
                         
                         var endTimeInMin = Math.floor((currTime - item.endTime)/(60 * 1000));
                         
-                        completedHtml += '<tr><td>Req id:' + item.requestId + '</td><td>  Cust id:' + item.customerId + '</td><td>  Req Time: ' + reqTimeInMin + ' mins ago</td><td> Start Time : ' + startTimeInMin + ' mins ago</td><td>  End Time:' + endTimeInMin + ' mins 	ago</td></tr>';
+                        completedHtml += '<tr><td>Req id:' + item.requestId + '</td><td> Cust id:' + item.customerId + '</td><td>  Req Time: ' + reqTimeInMin + ' min ago</td><td> Start Time : ' + startTimeInMin + ' min ago</td><td>  End Time:' + endTimeInMin + ' min ago</td></tr>';
                         
                     }
 
