@@ -25,7 +25,7 @@
     
     function postDriveRequest(customerId, requestId, driverId) {
     	$.ajax({
-        url: "http://localhost:7777/ola-drive/driver/ride",
+        url: "http://13.58.90.3/ola-drive/driver/ride",
         type: "POST",
         data: JSON.stringify({"customerId": customerId, "driverId" : driverId, "requestId" : requestId}),
         contentType: "application/json",
@@ -40,7 +40,7 @@
     var driverid = getParameterByName('driverid', '');
 
     $.ajax({
-        url: "http://localhost:7777/ola-drive/driver/" + driverid + "/ride",
+        url: "http://13.58.90.3/ola-drive/driver/" + driverid + "/ride",
         dataType: 'json',
         type: "GET",
         success: function (result) {
