@@ -14,7 +14,7 @@ import org.apache.commons.dbcp.BasicDataSource;
  */
 public class PostgreSQLJDBC {
 	
-	private static final String SERVER = "jdbc:postgresql://shareapp.cbq6nrdioaos.us-east-2.rds.amazonaws.com:5432/ola";
+	private static final String SERVER = "jdbc:postgresql://driveapp.cbq6nrdioaos.us-east-2.rds.amazonaws.com:5432/ola";
 	private static final String USER = "driveapp";
 	private static final String PASSWORD = "driveapp55";
 	
@@ -30,6 +30,10 @@ public class PostgreSQLJDBC {
 		initDataSource();
 	}
 
+	public static void main(String[] args) throws ClassNotFoundException, SQLException {
+		getInstance().connect();
+	}
+	
 	private void initDataSource() {
 		datasource = new BasicDataSource();
 		datasource.setDriverClassName("org.postgresql.Driver");
