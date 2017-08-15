@@ -23,7 +23,7 @@
             		var d = new Date();
 					var currTime = d.getTime();
 					
-            		var reqTimeInMin = Math.floor((currTime - item.requestTime)/(60 * 1000)) ;
+            		var requestTimeInMin = Math.floor((currTime - item.requestTime)/(60 * 1000)) ;
             		
             		var startTimeInMin;
             		if (item.startTime != 0) {
@@ -43,8 +43,8 @@
             			status = 'Completed';
             		}
             		
-                    trHTML += '<tr><td>' + item.requestId + '</td><td>' + item.customerId + '</td><td>' + requestTimeInMin + '</td><td>' + status + '</td><td>' + item.driverId + '</td><td>' + startTimeInMin + '</td><td>'
-                    	+ endTimeInMin + '</td></tr>';
+                    trHTML += '<tr><td>' + item.requestId + '</td><td>' + item.customerId + '</td><td>' + requestTimeInMin + ' min ago</td><td>' + status + '</td><td>' + item.driverId + '</td><td>' + startTimeInMin + ' min ago</td><td>'
+                    	+ endTimeInMin + ' min ago</td></tr>';
                 });
             trHTML +="</table>";
             $("#tableHolder").html(trHTML);
