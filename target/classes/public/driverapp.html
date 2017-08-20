@@ -1,0 +1,105 @@
+<html>
+    <head>Driver App
+    </head>
+    <body>
+         <input type="button" value="Refresh" onclick="javascript: reload()"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <script>
+
+	function getParameterByName(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+    
+      
+    function reload() {
+    	location.reload()
+    }
+    
+    function postDriveRequest(customerId, requestId, driverId) {
+    	$.ajax({
+        url: "http://13.58.90.3/ola-drive/driver/ride",
+        type: "POST",
+        data: JSON.stringify({"customerId": customerId, "driverId" : driverId, "requestId" : requestId}),
+        contentType: "application/json",
+        processData: false,
+        success: function (result) {
+        	alert(result.data);
+            reload();
+        }
+    });
+    }
+    
+    var driverid = getParameterByName('driverid', '');
+
+    $.ajax({
+        url: "http://13.58.90.3/ola-drive/driver/" + driverid + "/ride",
+        dataType: 'json',
+        type: "GET",
+        success: function (result) {
+            var waitingHtml = '<table>';
+            var ongoingHtml = '<table>';
+            var completedHtml = '<table>';
+
+            $.each(result.data, function (i, item) {
+	
+					var d = new Date();
+					var currTime = d.getTime();
+                    if (item.status == 0) {
+
+						var reqTimeInMin = Math.floor((currTime - item.requestTime)/(60 * 1000)) ;
+                        var customerId = item.customerId;
+                        var requestId = item.requestId;
+                        var driverId = item.driverId;
+                        waitingHtml += '<tr><td>Req id:' + item.requestId + '</td><td> Cust id:' + item.customerId + '</td><td> Req Time: ' + reqTimeInMin + ' min ago</td><td><input type="button" value="select" onclick="javascript: postDriveRequest(' + item.customerId + ', ' + item.requestId + ', ' + driverid + ')"/></td></tr>';
+
+                    } else if (item.status == 1) {
+                        
+                        var reqTimeInMin = Math.floor((currTime - item.requestTime)/(60 * 1000)) ;
+
+                        var startTimeInMin = Math.floor((currTime - item.startTime)/(60 * 1000));
+                        
+                        ongoingHtml += '<tr><td>Req id:' + item.requestId + '</td><td> Cust id:' + item.customerId + '</td><td> Req Time: ' + reqTimeInMin + ' min ago</td><td> Start Time : ' + startTimeInMin + ' min ago</td></tr>';
+                        
+                    } else {
+                        
+                        var reqTimeInMin = Math.floor((currTime - item.requestTime)/(60 * 1000)) ;
+
+                        var startTimeInMin = Math.floor((currTime - item.startTime)/(60 * 1000)) ;
+                        
+                        var endTimeInMin = Math.floor((currTime - item.endTime)/(60 * 1000));
+                        
+                        completedHtml += '<tr><td>Req id:' + item.requestId + '</td><td> Cust id:' + item.customerId + '</td><td>  Req Time: ' + reqTimeInMin + ' min ago</td><td> Start Time : ' + startTimeInMin + ' min ago</td><td>  End Time:' + endTimeInMin + ' min ago</td></tr>';
+                        
+                    }
+
+            	});
+                    waitingHtml+='</table>';
+                    $("#WaitingHolder").html(waitingHtml);
+                    ongoingHtml+='</table>';
+                    $("#OngoingHolder").html(ongoingHtml);
+                    completedHtml+='</table>';
+                    $("#CompletedHolder").html(completedHtml);
+
+        }
+	});
+	
+    </script>
+    
+    <table border="1" >
+    <tr><td align="center"><span style="font-weight:bold">Waiting</span></td><td align="center"><span style="font-weight:bold">Ongoing</span></td><td align="center"><span style="font-weight:bold">Completed</span></td></tr>
+    <tr>
+    <td align="left"><div id="WaitingHolder"></div></td>
+    <td align="left"><div id="OngoingHolder"></div></td>
+    <td align="left"><div id="CompletedHolder"></div></td>
+    </tr>
+    </table>
+</body>
+</html>

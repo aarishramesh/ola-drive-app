@@ -1,0 +1,60 @@
+<html>
+    <head>Rides Dashboard View
+    </head>
+    <body>
+          <input type="button" value="refresh" onclick="javascript: reload()"/>
+         
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    
+    <script>
+   
+    function reload() {
+    	location.reload()
+    }
+    
+    $.ajax({
+        url: "http://13.58.90.3/ola-drive/ride/dashboard",
+        dataType: 'json',
+        type: "GET",
+        success: function (result) {
+            //alert(result);
+            var trHTML = '<table border="1"><tr><th>RequestId</th><th>CustomerId</th><th>RequestTime</th><th>Status</th><th>DriverId</th><th>Start time</th><th>End time</th></tr>';
+            $.each(result.data, function (i, item) {
+            		var d = new Date();
+					var currTime = d.getTime();
+					
+            		var requestTimeInMin = Math.floor((currTime - item.requestTime)/(60 * 1000)) ;
+            		
+            		var startTimeInMin;
+            		if (item.startTime != 0) {
+            			startTimeInMin = Math.floor((currTime - item.startTime)/(60 * 1000)) ;
+            			startTimeInMin = startTimeInMin + ' min ago';
+            		}
+            		var endTimeInMin;
+            		if (item.endTime != 0) {
+            			endTimeInMin = Math.floor((currTime - item.endTime)/(60 * 1000)) ;
+            			endTimeInMin = endTimeInMin + ' min ago';
+            		}
+            		
+            		var status;
+            		if (item.status == 0) {
+            			status = 'Waiting';
+            		} else if (item.status == 1) {
+            		    status = 'Ongoing';
+            		} else {
+            			status = 'Completed';
+            		}
+            		
+                    trHTML += '<tr><td>' + item.requestId + '</td><td>' + item.customerId + '</td><td>' + requestTimeInMin + ' min ago</td><td>' + status + '</td><td>' + item.driverId + '</td><td>' + startTimeInMin + ' </td><td>'
+                    	+ endTimeInMin + '</td></tr>';
+                });
+            trHTML +="</table>";
+            $("#tableHolder").html(trHTML);
+        }
+    }).done (function(data) { });
+
+    </script>
+    
+    <div id="tableHolder"></div>
+    </body>
+</html>

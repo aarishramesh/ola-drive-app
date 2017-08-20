@@ -1,0 +1,40 @@
+<html>
+    <head>Customer app
+    </head>
+    <body>
+    <table>
+        <tr>
+            <td>Customer Id :</td>
+            <td>
+                <form name="submitform" id="submitform" method="post">
+                    <input type="number" id="customerId" pattern="[0-9]" name="customerId"/>
+                    <input type="submit" value="submit">
+                </form>
+            </td></tr>
+    </table>
+    </body>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    
+    <script>
+    $('[name="submitform"]').submit(function (e) {
+    e.preventDefault(); 
+    $.ajax({
+        url: "http://13.58.90.3/ola-drive/customer/ride",
+        type: "POST",
+        headers: {
+        	"Access-Control-Allow-Origin" : "*",
+        	"Access-Control-Allow-Methods" : "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+        	"Access-Control-Allow-Headers" : "Origin, Content-Type, X-Auth-Token"
+        },
+        data: JSON.stringify({"customerId": $("#customerId").val()}),
+        contentType: "application/json",
+        processData: false,
+        success: function (result) {
+            alert("Customer ride has been successfully added");
+        }
+    });
+	});
+
+    </script>
+</html>
